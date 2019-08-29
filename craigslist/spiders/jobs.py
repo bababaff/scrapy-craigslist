@@ -22,3 +22,12 @@ class JobsSpider(scrapy.Spider):
                 'title': title,
                 'link': link
             }
+
+        next_page_url = response.xpath(
+            '//*[@class="button next"]/@href').get()  # /search/egr?s=120
+
+        # https://losangeles.craigslist.org/search/egr?s=120
+        abs_next_page_url = response.urljoin(next_page_url)
+
+        if next_page_url:
+            yield scrapy.Request(abs_next_page_url, callback=self.parse)
